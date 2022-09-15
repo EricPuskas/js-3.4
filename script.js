@@ -11,7 +11,6 @@ console.log(Math.random());
 console.log(Math.random());
 console.log(Math.random());
 
- 
 const whatsMyAge = (birthyear) => {
   const date = new Date();
   const year = date.getFullYear();
@@ -199,10 +198,12 @@ for (const player of players) {
 
 console.log({ totalAmount });
 
+players.reduce((acc, player) => acc + player.amount, 0);
+
 console.log(
   "Array.reduce:",
   players.reduce((accumulator, user) => {
-    console.log({ accumulator, amount: user.amount })
+    console.log({ accumulator, amount: user.amount });
     return accumulator + user.amount;
   }, 50)
 );
@@ -211,6 +212,7 @@ console.log("\n");
 console.log("\n");
 console.log("\n");
 console.log("\n");
+
 /**
  * Aggregate data
  */
@@ -228,18 +230,167 @@ console.log({ usersByAge });
 
 const groupByUserAge = (accumulator, user) => {
   const { age, name } = user;
- 
-  if(!accumulator[age]){
+
+  if (!accumulator[age]) {
     accumulator[age] = [];
   }
- 
+
   accumulator[age].push(name);
- 
+
   return accumulator; // Obligatoriu
-}
+};
 
 console.log("\n");
 console.log("\n");
 console.log("\n");
 console.log("\n");
-console.log("REDUCE:", users.reduce(groupByUserAge, {}))
+console.log("REDUCE:", users.reduce(groupByUserAge, {}));
+
+const myReduce = (array, callback, initialValue) => {
+  let accumulator = initialValue;
+
+  for (const item of array) {
+    accumulator = callback(accumulator, item);
+  }
+
+  return accumulator;
+};
+
+const myReduceFn = (accumulator, user) => {
+  return user.age > accumulator.age ? user : accumulator;
+};
+
+const oldest = myReduce(users, myReduceFn, users[0]);
+
+const getOldestUser = (users) => {
+  let maxAge = 0;
+
+  for (const user of users) {
+    if (user.age >= maxAge) maxAge = user.age;
+  }
+
+  return maxAge;
+};
+
+console.log("\n");
+console.log("\n");
+console.log("\n");
+console.log("\n");
+console.log("OLDEST:", oldest);
+console.log("My function of oldest person:", getOldestUser(users));
+
+/**
+ * Scrieti o functie care returneaza patratul unui numar
+ *
+ * Input: findSquare(4) => 16, findSquare(12) => 144;
+ */
+const findSquare = (num) => {
+  // return num * num ;
+  return num ** 2;
+  // return Math.pow(num, 2)
+};
+
+/**
+ * Genereaza un numar aleator, avand un interval, min - max.
+ *
+ * Input: getRandom(100, 200) => >= 100 && < 200 (193)
+ */
+// 1000                              2000
+// [..................................]
+// min                               max - min
+// [.................................]
+const getRandom = (minNumber, maxNumber) => {
+  const random = Math.random();
+  const diff = maxNumber - minNumber;
+  const random2 = random * diff;
+  const random3 = random * diff + minNumber;
+  const random4 = Math.floor(random3);
+
+  console.log({
+    minNumber,
+    maxNumber,
+    diff,
+    random,
+    random2,
+    random3,
+    random4
+  })
+
+  return Math.floor(Math.random() * (maxNumber - minNumber) + minNumber);
+};
+
+// console.log(getRandom(100, 200))
+getRandom(1000, 2000);
+
+function generateRandom(min, max) {
+
+  // find diff
+  let difference = max - min;
+
+  // generate random number 
+  let rand = Math.random();
+
+  // multiply with difference 
+  rand = Math.floor(rand * difference);
+
+  // add with min value 
+  rand = rand + min;
+
+  return rand;
+}
+
+console.log(generateRandom(1000, 2000));
+
+
+/**
+ * Facem o agregare, pentru fiecare caracter din string, vrem sa notam de cate ori apare in acel string
+ * Input: "test"
+ * Output: { "t": 2, e: 1, s: 1 }
+ */
+const groupLetters = (string) => {
+  // test
+  // const counter = {
+  //   "t": 2,
+  //   "e": 1,
+  //   "s": 1,
+  // };
+  const counter = {};
+
+  for(const letter of string){
+     const character = letter.toLowerCase();
+
+     if(!counter[character]) counter[character] = 0;
+     counter[character] += 1;
+  }
+
+  return counter
+}
+
+console.log(groupLetters("account"))
+
+/**
+ * Adauga numere nelimitate in functie de parametrii
+ * 
+ * Input: addNumbers(1,2,3,4,5);
+ * Output: suma.. 
+ */
+const addNumbers = (...numbers) => {
+
+  console.log("Original:" ,numbers);
+  console.log("Original Reversed:" ,numbers.reverse());
+
+   let sum = 0;
+
+  //  for(const number of numbers){
+  //     sum += number;
+  //  }
+
+  numbers.forEach(number => sum += number)
+
+   console.log({ numbers, sum  })
+   return sum;
+}
+
+addNumbers(1,2,3);
+addNumbers(4,6,9,1,1,1,2);
+ 
